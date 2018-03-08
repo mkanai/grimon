@@ -1,0 +1,17 @@
+Package: grimon
+Type: Package
+Title: Graphical interface to visualize multi-omics networks
+Version: 0.1.0
+Author: Masahiro Kanai
+Maintainer: Masahiro Kanai <mkanai@g.harvard.edu>
+Description: Grimon (Graphical interface to visualize multi-omics networks)
+    visualizes high-dimensional multi-layered data sets in three-dimensional
+    parallel coordinates. It enables users to intuitively and interactively
+    explore their data, helping their understanding of multiple inter-layer
+    connections embedded in high-dimensional complex data.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 0.12.14), rgl
+LinkingTo: Rcpp, RcppEigen
+RoxygenNote: 6.0.1
