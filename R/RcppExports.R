@@ -16,8 +16,8 @@ norm_matrix <- function(x, z_idx, scale, shift) {
 }
 
 #' @export
-optimize_coordinates <- function(x, z_idx, segment_mat, maxiter, T, alpha, to_norm, norm_scale, norm_shift, to_rotate = TRUE, to_flip = TRUE, to_shift = TRUE, progress = FALSE) {
-    .Call('_grimon_optimize_coordinates', PACKAGE = 'grimon', x, z_idx, segment_mat, maxiter, T, alpha, to_norm, norm_scale, norm_shift, to_rotate, to_flip, to_shift, progress)
+optimize_coordinates <- function(x, z_idx, segment_mat, maxiter, T, alpha, score_function, to_norm, norm_scale, norm_shift, to_rotate = TRUE, to_flip = TRUE, to_shift = TRUE, progress = FALSE) {
+    .Call('_grimon_optimize_coordinates', PACKAGE = 'grimon', x, z_idx, segment_mat, maxiter, T, alpha, score_function, to_norm, norm_scale, norm_shift, to_rotate, to_flip, to_shift, progress)
 }
 
 #' @export

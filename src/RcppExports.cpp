@@ -44,8 +44,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // optimize_coordinates
-NumericMatrix optimize_coordinates(const Eigen::Map<Eigen::MatrixXd> x, IntegerVector z_idx, IntegerMatrix segment_mat, int maxiter, double T, double alpha, bool to_norm, NumericVector norm_scale, NumericVector norm_shift, bool to_rotate, bool to_flip, bool to_shift, bool progress);
-RcppExport SEXP _grimon_optimize_coordinates(SEXP xSEXP, SEXP z_idxSEXP, SEXP segment_matSEXP, SEXP maxiterSEXP, SEXP TSEXP, SEXP alphaSEXP, SEXP to_normSEXP, SEXP norm_scaleSEXP, SEXP norm_shiftSEXP, SEXP to_rotateSEXP, SEXP to_flipSEXP, SEXP to_shiftSEXP, SEXP progressSEXP) {
+NumericMatrix optimize_coordinates(const Eigen::Map<Eigen::MatrixXd> x, IntegerVector z_idx, IntegerMatrix segment_mat, int maxiter, double T, double alpha, int score_function, bool to_norm, NumericVector norm_scale, NumericVector norm_shift, bool to_rotate, bool to_flip, bool to_shift, bool progress);
+RcppExport SEXP _grimon_optimize_coordinates(SEXP xSEXP, SEXP z_idxSEXP, SEXP segment_matSEXP, SEXP maxiterSEXP, SEXP TSEXP, SEXP alphaSEXP, SEXP score_functionSEXP, SEXP to_normSEXP, SEXP norm_scaleSEXP, SEXP norm_shiftSEXP, SEXP to_rotateSEXP, SEXP to_flipSEXP, SEXP to_shiftSEXP, SEXP progressSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -55,6 +55,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
     Rcpp::traits::input_parameter< double >::type T(TSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< int >::type score_function(score_functionSEXP);
     Rcpp::traits::input_parameter< bool >::type to_norm(to_normSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type norm_scale(norm_scaleSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type norm_shift(norm_shiftSEXP);
@@ -62,7 +63,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type to_flip(to_flipSEXP);
     Rcpp::traits::input_parameter< bool >::type to_shift(to_shiftSEXP);
     Rcpp::traits::input_parameter< bool >::type progress(progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(optimize_coordinates(x, z_idx, segment_mat, maxiter, T, alpha, to_norm, norm_scale, norm_shift, to_rotate, to_flip, to_shift, progress));
+    rcpp_result_gen = Rcpp::wrap(optimize_coordinates(x, z_idx, segment_mat, maxiter, T, alpha, score_function, to_norm, norm_scale, norm_shift, to_rotate, to_flip, to_shift, progress));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -83,7 +84,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_grimon_generate_sub_coordinates", (DL_FUNC) &_grimon_generate_sub_coordinates, 2},
     {"_grimon_construct_segment_matrix", (DL_FUNC) &_grimon_construct_segment_matrix, 1},
     {"_grimon_norm_matrix", (DL_FUNC) &_grimon_norm_matrix, 4},
-    {"_grimon_optimize_coordinates", (DL_FUNC) &_grimon_optimize_coordinates, 13},
+    {"_grimon_optimize_coordinates", (DL_FUNC) &_grimon_optimize_coordinates, 14},
     {"_grimon_wide_to_long", (DL_FUNC) &_grimon_wide_to_long, 2},
     {NULL, NULL, 0}
 };

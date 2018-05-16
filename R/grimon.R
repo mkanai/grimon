@@ -1,11 +1,56 @@
 #' grimon
 #'
-#' @param x x
+#' @param x an input \code{matrix}, \code{data.frame}, or \code{list}.
+#'   It should be in \code{"wide"} or \code{"long"} format.
+#'   The \code{"wide"} format is \code{n} x 2\code{m} matrix,
+#'   where \code{n} represents a number of points (samples) and \code{m} represents a number of planes (layers).
+#'
+#'   The \code{"long"} format is basically \code{nm} x 2 matrix,
+#'   but accepts different number of samples across planes (layers).
+#' @param format format of an input \code{x}, \code{"wide"} or \code{"long"}.
+#' @param segment_mat a 2-column matrix to specify segment (edge) connections by the indexes of connecting points.
+#'   The index is calculated based on the long format.
+#'   If \code{NULL} and \code{format} is \code{"wide"}, all points in the same row are connected.
+#' @param col colors of points.
+#' @param label labels of planes (layers).
+#' @param optimize_coordinates a logical value indicating whether to optimize points coordinates across layers.
+#' @param maxiter a maxmium number of iterations for optimization by simulated annealing.
+#' @param initT a initial value of the temperature parameter \code{T} for simulated annealing.
+#' @param alpha a numerical value of the cooling rate \code{alpha} for simulated annealing.
+#'   If \code{NULL}, \code{alpha} will be set as \code{1 - 5 / maxiter}.
+#' @param score_function an objectice score function to minimize, \code{"angle"} or \code{"length"}.
+#'   If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized.
+#'   If \code{"length"}, the sum of length of segments will be minimized.
+#' @param progress a logical value indicating whether to show optimization progress.
+#' @param norm a logical value indicating whether to normalize point scales.
+#'   Point coordinates for x axis, \code{px}, will be normalized as: \code{(px - min(px)) / (max(px) - min(px)) * scale - shift}.
+#'   Ditto for y axis.
+#' @param norm_scale a numerical value of the scaling parameter for normalization.
+#'   If \code{NULL}, the default value is 2.
+#' @param norm_shift a numerical value of the shifting parameter for normalization.
+#'   if \code{NULL}, the default value is 1.
+#' @param z_interval a numerical value of the interval length between planes (layers).
+#' @param point_size a point size.
+#' @param plane_col colors of planes.
+#' @param plane_alpha alpha transparency of planes.
+#' @param border_col a color of borders surrounding a plane.
+#' @param border_alpha alpha transparency of borders.
+#' @param border_lwd line width of borders.
+#' @param segment_col colors of segments (edges).
+#'   If \code{NULL}, the same color for connecting points is used.
+#' @param segment_alpha alpha transparency of segments (edges).
+#' @param segment_lwd line width of segments (edges).
+#' @param new_device a logical value indicating whether to open a new rgl device.
+#' @param reset_view a logical value indicating whether to reset viewpoint perspective.
+#' @param userMatrix \code{userMatrix} parameter to be passed to \code{rgl::par3d}.
+#' @param windowRect \code{windowRect} parameter to be passed to \code{rgl::par3d}.
+#' @param plot_2d_panels a logical value indicating whether to additionally plot two-dimensional panels of each layer.
 #'
 #' @examples
 #' data("grimon.example")
 #' grimon(x, col = col, label = 1:6,
 #'        optimize_coordinates = TRUE, maxiter = 1e3,
+#'        score_function = "angle",
 #'        segment_alpha = 0.5)
 #' @export
 grimon = function(x, format = "wide",
@@ -13,6 +58,7 @@ grimon = function(x, format = "wide",
                      col = 'black', label = NULL,
                      optimize_coordinates = FALSE,
                      maxiter = 1000, initT = 1, alpha = NULL,
+                     score_function = "angle",
                      progress = FALSE,
                      norm = TRUE, norm_scale = NULL, norm_shift = NULL,
                      z_interval = 1,
@@ -21,7 +67,9 @@ grimon = function(x, format = "wide",
                      border_col = 'black', border_alpha = 1, border_lwd = 1,
                      segment_col = NULL, segment_alpha = 0.3, segment_lwd = 1,
                      new_device = FALSE, reset_view = TRUE,
-                     userMatrix = rotationMatrix(pi/2, 0, 1, 0)) {
+                     userMatrix = rotationMatrix(pi/2, 0, 1, 0),
+                     windowRect = c(0, 0, 800, 600),
+                     plot_2d_panels = FALSE) {
 
   # argument check
   if (!is.list(x) && !is.matrix(x) && !is.data.frame(x)) {
@@ -48,6 +96,9 @@ grimon = function(x, format = "wide",
 
   if (is.null(alpha)) {
     alpha = 1 - 5/maxiter
+  }
+  if (!score_function %in% c("angle", "length")) {
+    stop('score_function must be "angle" or "length".')
   }
   if (is.null(norm_shift)) {
     if (is.null(norm_scale)) {
@@ -97,20 +148,26 @@ grimon = function(x, format = "wide",
       segment_col = col
     }
     if (length(col) == n) {
-      col = rep(col, rep = m)
+      col = rep(col, times = m)
     }
+    mat = wide_to_long(x, z_interval)
+    na_idx = which(is.na(mat[,1]))
+    valid_segment_idx = which(!(segment_mat[,1] %in% na_idx | segment_mat[,2] %in% na_idx))
+    segment_mat = segment_mat[valid_segment_idx,]
+    z_idx = n * (0:m)
+
     if (length(segment_col) == n) {
-      segment_col = rep(rep(segment_col, each = 2), rep = m-1)
+      segment_col = rep(rep(segment_col, each = 2), times = m-1)
+      segment_col = segment_col[rep(valid_segment_idx*2, each = 2) - (1:0)]
     }
     if (length(segment_alpha) == n) {
-      segment_alpha = rep(rep(segment_alpha, each = 2), rep = m-1)
+      segment_alpha = rep(rep(segment_alpha, each = 2), times = m-1)
+      segment_alpha = segment_alpha[rep(valid_segment_idx*2, each = 2) - (1:0)]
     }
     if (length(segment_lwd) == n) {
-      segment_lwd = rep(rep(segment_lwd, each = 2), rep = m-1)
+      segment_lwd = rep(rep(segment_lwd, each = 2), times = m-1)
+      segment_lwd = segment_lwd[rep(valid_segment_idx*2, each = 2) - (1:0)]
     }
-
-    mat = wide_to_long(x, z_interval)
-    z_idx = n * (0:m)
   } else if (format == "long") {
     n = nrow(x)
     s = nrow(segment_mat)
@@ -148,12 +205,23 @@ grimon = function(x, format = "wide",
     if (length(norm_shift) == 1) {
       norm_shift = rep(norm_shift, m)
     }
-    mat = norm_matrix(mat, z_idx, norm_scale, norm_shift)
+
+    if (any(is.na(mat))) {
+      mat = .norm_matrix(mat, z_idx, norm_scale, norm_shift)
+    } else {
+      mat = norm_matrix(mat, z_idx, norm_scale, norm_shift)
+    }
   }
 
   if (optimize_coordinates) {
+    if (score_function == "angle") {
+      score_function = 0
+    } else if (score_function == "length") {
+      score_function = 1
+    }
     mat = optimize_coordinates(mat, z_idx, segment_mat,
                                maxiter, initT, alpha,
+                               score_function,
                                norm, norm_scale, norm_shift,
                                progress = progress)
   }
@@ -173,7 +241,7 @@ grimon = function(x, format = "wide",
   }
   if (new_device || reset_view) {
     par3d(userMatrix = userMatrix)
-    par3d(windowRect = c(0, 0, 800, 600))
+    par3d(windowRect = windowRect)
   }
 
   # planes
@@ -202,4 +270,35 @@ grimon = function(x, format = "wide",
 
   # axes
   axis3d('z', at = z, labels = label)
+
+  if (plot_2d_panels) {
+    oldpar = par(no.readonly = T)
+    par(mfrow = c(1, 1), pty = 's')
+    for (i in 1:m) {
+      ii = z_idx[i] + 1
+      n = z_idx[i+1]
+      lim = c(0, 1) * norm_scale[i] - norm_shift[i]
+      plot(mat[ii:n, 1:2],
+           col = as.character(col), pch = 19,
+           xlab = '', ylab = '',
+           xlim = lim, ylim = lim,
+           main = label[i])
+    }
+    par(oldpar)
+  }
+}
+
+
+.norm_matrix = function(mat, z_idx, norm_scale, norm_shift) {
+  m = length(z_idx) - 1
+  for (i in 1:m) {
+    ii = z_idx[i] + 1
+    n = z_idx[i+1]
+    for (j in 1:2) {
+      xmin = min(mat[ii:n, j], na.rm = T)
+      xmax = max(mat[ii:n, j], na.rm = T)
+      mat[ii:n, j] = (mat[ii:n, j] - xmin) / (xmax - xmin) * norm_scale - norm_shift
+    }
+  }
+  return(mat)
 }

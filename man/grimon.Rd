@@ -9,15 +9,88 @@
 \usage{
 grimon(x, format = "wide", segment_mat = NULL, col = "black",
   label = NULL, optimize_coordinates = FALSE, maxiter = 1000, initT = 1,
-  alpha = NULL, progress = FALSE, norm = TRUE, norm_scale = NULL,
-  norm_shift = NULL, z_interval = 1, point_size = 2,
+  alpha = NULL, score_function = "angle", progress = FALSE, norm = TRUE,
+  norm_scale = NULL, norm_shift = NULL, z_interval = 1, point_size = 2,
   plane_col = "black", plane_alpha = 0.1, border_col = "black",
   border_alpha = 1, border_lwd = 1, segment_col = NULL,
   segment_alpha = 0.3, segment_lwd = 1, new_device = FALSE,
-  reset_view = TRUE, userMatrix = rotationMatrix(pi/2, 0, 1, 0))
+  reset_view = TRUE, userMatrix = rotationMatrix(pi/2, 0, 1, 0),
+  windowRect = c(0, 0, 800, 600), plot_2d_panels = FALSE)
 }
 \arguments{
-\item{x}{x}
+\item{x}{an input \code{matrix}, \code{data.frame}, or \code{list}.
+  It should be in \code{"wide"} or \code{"long"} format.
+  The \code{"wide"} format is \code{n} x 2\code{m} matrix,
+  where \code{n} represents a number of points (samples) and \code{m} represents a number of planes (layers).
+
+  The \code{"long"} format is basically \code{nm} x 2 matrix,
+  but accepts different number of samples across planes (layers).}
+
+\item{format}{format of an input \code{x}, \code{"wide"} or \code{"long"}.}
+
+\item{segment_mat}{a 2-column matrix to specify segment (edge) connections by the indexes of connecting points.
+The index is calculated based on the long format.
+If \code{NULL} and \code{format} is \code{"wide"}, all points in the same row are connected.}
+
+\item{col}{colors of points.}
+
+\item{label}{labels of planes (layers).}
+
+\item{optimize_coordinates}{a logical value indicating whether to optimize points coordinates across layers.}
+
+\item{maxiter}{a maxmium number of iterations for optimization by simulated annealing.}
+
+\item{initT}{a initial value of the temperature parameter \code{T} for simulated annealing.}
+
+\item{alpha}{a numerical value of the cooling rate \code{alpha} for simulated annealing.
+If \code{NULL}, \code{alpha} will be set as \code{1 - 5 / maxiter}.}
+
+\item{score_function}{an objectice score function to minimize, \code{"angle"} or \code{"length"}.
+If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized.
+If \code{"length"}, the sum of length of segments will be minimized.}
+
+\item{progress}{a logical value indicating whether to show optimization progress.}
+
+\item{norm}{a logical value indicating whether to normalize point scales.
+Point coordinates for x axis, \code{px}, will be normalized as: \code{(px - min(px)) / (max(px) - min(px)) * scale - shift}.
+Ditto for y axis.}
+
+\item{norm_scale}{a numerical value of the scaling parameter for normalization.
+If \code{NULL}, the default value is 2.}
+
+\item{norm_shift}{a numerical value of the shifting parameter for normalization.
+if \code{NULL}, the default value is 1.}
+
+\item{z_interval}{a numerical value of the interval length between planes (layers).}
+
+\item{point_size}{a point size.}
+
+\item{plane_col}{colors of planes.}
+
+\item{plane_alpha}{alpha transparency of planes.}
+
+\item{border_col}{a color of borders surrounding a plane.}
+
+\item{border_alpha}{alpha transparency of borders.}
+
+\item{border_lwd}{line width of borders.}
+
+\item{segment_col}{colors of segments (edges).
+If \code{NULL}, the same color for connecting points is used.}
+
+\item{segment_alpha}{alpha transparency of segments (edges).}
+
+\item{segment_lwd}{line width of segments (edges).}
+
+\item{new_device}{a logical value indicating whether to open a new rgl device.}
+
+\item{reset_view}{a logical value indicating whether to reset viewpoint perspective.}
+
+\item{userMatrix}{\code{userMatrix} parameter to be passed to \code{rgl::par3d}.}
+
+\item{windowRect}{\code{windowRect} parameter to be passed to \code{rgl::par3d}.}
+
+\item{plot_2d_panels}{a logical value indicating whether to additionally plot two-dimensional panels of each layer.}
 }
 \description{
 grimon
@@ -32,6 +105,7 @@ connections embedded in high-dimensional complex data.
 data("grimon.example")
 grimon(x, col = col, label = 1:6,
        optimize_coordinates = TRUE, maxiter = 1e3,
+       score_function = "angle",
        segment_alpha = 0.5)
 }
 \author{

@@ -1,7 +1,7 @@
 Package: grimon
 Type: Package
 Title: Graphical interface to visualize multi-omics networks
-Version: 0.1.0
+Version: 1.0.0
 Author: Masahiro Kanai
 Maintainer: Masahiro Kanai <mkanai@g.harvard.edu>
 Description: Grimon (Graphical interface to visualize multi-omics networks)

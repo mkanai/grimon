@@ -9,8 +9,12 @@ using Eigen::MatrixXd;
 
 // [[Rcpp::depends("RcppEigen")]]
 
+double get_length(double x1, double y1, double x2, double y2) {
+  return pow(x1-x2, 2) + pow(y1-y2, 2);
+}
+
 double get_angle(double x1, double y1, double x2, double y2) {
-  return atan2(y1-y2, x1-x2);
+  return atan2(sqrt(get_length(x1, y1, x2, y2)), 1);
 }
 
 double angle_score(MatrixXd x, IntegerMatrix segment_mat) {
@@ -24,6 +28,16 @@ double angle_score(MatrixXd x, IntegerMatrix segment_mat) {
   return score;
 }
 
+double length_score(MatrixXd x, IntegerMatrix segment_mat) {
+  int s = segment_mat.rows();
+  double score = 0;
+  for (int i = 0; i < s; i++) {
+    int ii = segment_mat(i, 0) - 1;
+    int jj = segment_mat(i, 1) - 1;
+    score += get_length(x(ii, 0), x(ii, 1), x(jj, 0), x(jj, 1));
+  }
+  return score;
+}
 
 MatrixXd norm_matrix(MatrixXd x, double scale = 2, double shift = 1) {
   int n = x.rows(), m = x.cols();
@@ -71,12 +85,24 @@ MatrixXd flip_matrix_z(MatrixXd x, int z, int to_flip) {
 NumericMatrix optimize_coordinates(const Eigen::Map<Eigen::MatrixXd> x,
                                    IntegerVector z_idx, IntegerMatrix segment_mat,
                                    int maxiter, double T, double alpha,
+                                   int score_function,
                                    bool to_norm,
                                    NumericVector norm_scale, NumericVector norm_shift,
                                    bool to_rotate = true,
                                    bool to_flip = true, bool to_shift = true,
                                    bool progress = false) {
   int n = x.rows(), m = z_idx.length() - 1;
+
+  // score function
+  double (*f_score)(MatrixXd, IntegerMatrix);
+  switch (score_function) {
+  case 0: // edge angle
+    f_score = angle_score;
+    break;
+  case 1: // edge length
+    f_score = length_score;
+    break;
+  }
 
   MatrixXd xx(x);
   MatrixXd ret = xx;
@@ -104,7 +130,8 @@ NumericMatrix optimize_coordinates(const Eigen::Map<Eigen::MatrixXd> x,
     if (to_norm) {
       new_xx.block(zstart, 0, nn, 2) = norm_matrix(new_xx.block(zstart, 0, nn, 2), norm_scale[rz], norm_shift[rz]);
     }
-    double new_score = angle_score(new_xx, segment_mat);
+
+    double new_score = f_score(new_xx, segment_mat);
 
     double p = exp(-fabs(new_score - score)/(T * 100));
 
