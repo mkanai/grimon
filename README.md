@@ -9,6 +9,8 @@ Grimon (**Gr**aphical **i**nterface to visualize **m**ulti-**o**mics **n**etwork
 <p><img src="http://mkanai.github.io/img/Grimon_demo.png" width=768px></p>
 
 ## Installation
+To install Grimon, please type the following code in your R console.
+
 ```{r}
 if (!require("devtools")) {
   install.packages("devtools")
@@ -23,14 +25,19 @@ devtools::install_github("mkanai/grimon")
 ## Example usage
 ```{r}
 library(grimon)
+# "example" and "example_col" will be loaded.
 data("grimon.example")
-grimon(x, col = col, label = 1:6,
+
+# grimon plot function
+grimon(x = example, col = example_col, label = 1:6,
        optimize_coordinates = TRUE, maxiter = 1e3,
        score_function = "angle",
        segment_alpha = 0.5)
 ```
 
-This will plot an example figure of the above Grimon visualization in an interactive 3D window of the rgl device. Here, each argument corresponds to:
+This will plot an example figure of the above Grimon visualization in an interactive 3D window of the rgl device. You can interact with the plot using your mouse. By default, the left mouse button is used to rotate the plot (by dragging; *i.e.,* click, hold, and move). The right mouse button is used to resize the plot, and the middle button is to change the perspective in the point of view.
+
+Here, each argument of the `grimon` function corresponds to:
 
 * `x`: an input `matrix`. The `i`- and `i+1`-th columns correspond to x- and y- values of the `i`-th layer.
 * `col`: colors of points. They are also used for colors of segments (edges) unless `segment_col` is specified.
@@ -43,6 +50,27 @@ This will plot an example figure of the above Grimon visualization in an interac
 For a full explanation of all the arguments available, please refer to `?grimon`.
 
 In addition to `"grimon.example"` (a simulated data based on the MNIST data set), we also provide additional example data constructed from publicly available multi-omics data sets: `"grimon.geuvadis"` ([Lappalainen, T., *et al.*, *Nature*, 2013](http://dx.doi.org/10.1038/nature12531)) and `"grimon.jointLCL"` ([Li, YI., *et al.*, *Science*, 2016](http://dx.doi.org/10.1126/science.aad9417)).
+
+For each example data set, you can plot Grimon visualization via the following code. Please note that these `data("grimon.XXX")` commands will load the two variables into your environment, the input data, `XXX` (*e.g.* `geuvadis`), and the colors of points, `XXX_col` (*e.g.* `geuvadis_col`). Unlike `"grimon.example"`, `"grimon.geuvadis"` and `"grimon.jointLCL"` provide the input data as a `list`, which exemplifies an input `list` explained below. 
+
+```{r}
+# Geuvadis Project data (Lappalainen, T., et al., Nature, 2013)
+# "geuvadis" and "geuvadis_col" will be loaded.
+data("grimon.geuvadis")
+grimon(x = geuvadis, col = geuvadis_col,
+       optimize_coordinates = TRUE, maxiter = 1e3,
+       score_function = "angle",
+       segment_alpha = 0.5)
+
+# JointLCL data (Li, YI., et al., Science, 2016)
+# "jointLCL" and "jointLCL_col" will be loaded.
+data("grimon.jointLCL")
+grimon(x = jointLCL, col = jointLCL_col,
+       optimize_coordinates = TRUE, maxiter = 1e3,
+       score_function = "angle",
+       segment_alpha = 0.5)
+```
+
 
 ### Prepare your input
 

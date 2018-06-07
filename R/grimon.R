@@ -9,7 +9,7 @@
 #'   but accepts different number of samples across planes (layers).
 #' @param format format of an input \code{x}, \code{"wide"} or \code{"long"}.
 #' @param segment_mat a 2-column matrix to specify segment (edge) connections by the indexes of connecting points.
-#'   The index is calculated based on the long format.
+#'   The index is calculated based on the \code{"long"} format. It is required particularly when \code{format} is \code{"long"}.
 #'   If \code{NULL} and \code{format} is \code{"wide"}, all points in the same row are connected.
 #' @param col colors of points.
 #' @param label labels of planes (layers).
@@ -48,7 +48,7 @@
 #'
 #' @examples
 #' data("grimon.example")
-#' grimon(x, col = col, label = 1:6,
+#' grimon(x = example, col = example_col, label = 1:6,
 #'        optimize_coordinates = TRUE, maxiter = 1e3,
 #'        score_function = "angle",
 #'        segment_alpha = 0.5)
