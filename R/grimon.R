@@ -116,9 +116,9 @@ grimon = function(x, format = "wide",
     xx = NULL
     for (i in 1:length(x)) {
       if (format == "wide") {
-        xx = cbind(xx, x[[i]][, 1:2])
+        xx = cbind(xx, as.matrix(x[[i]][, 1:2]))
       } else if (format == "long") {
-        xx = rbind(xx, cbind(x[[i]][, 1:2], rep(i*z_interval, nrow(x[[i]]))))
+        xx = rbind(xx, cbind(as.matrix(x[[i]][, 1:2]), rep(i*z_interval, nrow(x[[i]]))))
       }
     }
     x = xx
