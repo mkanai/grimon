@@ -20,7 +20,7 @@ devtools::install_github("mkanai/grimon")
 
 ### Requirements
 
-* [rgl](https://cran.r-project.org/web/packages/rgl/index.html) package. Grimon fully utilizes rgl's functionality to plot 3D intereactive graphics using OpenGL. 
+* [rgl](https://cran.r-project.org/web/packages/rgl/index.html) package. Grimon fully utilizes rgl's functionality to plot 3D interactive graphics using OpenGL.
 
 ## Example usage
 ```{r}
@@ -43,8 +43,8 @@ Here, each argument of the `grimon` function corresponds to:
 * `col`: colors of points. They are also used for colors of segments (edges) unless `segment_col` is specified.
 * `label`: labels of planes (layers).
 * `optimize_coordinates`: a logical value indicating whether to optimize points coordinates across layers.
-* `maxiter`: a maxmium number of iterations for optimization by simulated annealing.
-* `score_function`: an objectice score function to minimize. Currently, it could be either `"angle"` or `"length"`. If `"angle"`, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized. If `"length"`, the sum of length of segments will be minimized.
+* `maxiter`: a maximum number of iterations for optimization by simulated annealing.
+* `score_function`: an objective score function to minimize. Currently, it could be either `"angle"` or `"length"`. If `"angle"`, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized. If `"length"`, the sum of length of segments will be minimized.
 * `segment_alpha`: alpha transparency of segments (edges)
 
 For a full explanation of all the arguments available, please refer to `?grimon`.
@@ -74,7 +74,7 @@ grimon(x = jointLCL, col = jointLCL_col,
 
 ### Prepare your input
 
-Grimon accepts an input `matrix`, `data.frame`, or `list`. If `matrix` or `data.frame` is supplied, basically it should be `n` x `2m` matrix, where `n` represents a number of points (samples) and `m` represents a number of planes (layers). If `list` is supplied, Grimon automatically conmbines all the elements in the same order of the original `list`.
+Grimon accepts an input `matrix`, `data.frame`, or `list`. If `matrix` or `data.frame` is supplied, basically it should be `n` x `2m` matrix, where `n` represents a number of points (samples) and `m` represents a number of planes (layers). If `list` is supplied, Grimon automatically combines all the elements in the same order of the original `list`.
 
 For example, assume you have multiple original data matrix in a `list` format, and want to plot Grimon visualization of the first two PCs across different data sets. You could generate your input to Grimon using the following code.
 
@@ -105,7 +105,7 @@ input_mat = matrix(nrow = length(all_samples), ncol = 2,
 
 ### Save figures
 
-To save your figure, please use [`rgl.snapshot`](https://www.rdocumentation.org/packages/rgl/versions/0.99.16/topics/rgl.snapshot) or [`rgl.postscript`](https://www.rdocumentation.org/packages/rgl/versions/0.99.16/topics/rgl.postscript). While `rgl.postscript` saves your figure in a vector graphics, it doesn't support alpha transparency and the resulting file becomes too large when the figure contains too many points and edges. On the other hand, one of the limitations of `rgl.snapshot` is that users couldn't specify resolution of the image. If you want to generate a high-resolution figure for publication, we recommend you to use the option `windowRect` to maxmize your rgl device size as wide as possible.
+To save your figure, please use [`rgl.snapshot`](https://www.rdocumentation.org/packages/rgl/versions/0.99.16/topics/rgl.snapshot) or [`rgl.postscript`](https://www.rdocumentation.org/packages/rgl/versions/0.99.16/topics/rgl.postscript). While `rgl.postscript` saves your figure in a vector graphics, it doesn't support alpha transparency and the resulting file becomes too large when the figure contains too many points and edges. On the other hand, one of the limitations of `rgl.snapshot` is that users couldn't specify resolution of the image. If you want to generate a high-resolution figure for publication, we recommend you to use the option `windowRect` to maximize your rgl device size as wide as possible.
 
 ```
 # E.g., this will enlarge your window size four times bigger than the default.
@@ -129,6 +129,12 @@ You could also plot the two-dimensional figures of each layer (as shown below) w
 
 ### Example 2: the Geuvadis Project ([Lappalainen, T., *et al.*, *Nature*, 2013](http://dx.doi.org/10.1038/nature12531))
 <p><img src="http://mkanai.github.io/img/Grimon_example2.png" width=768px></p>
+
+## Citation
+When using Grimon, please cite the following paper.
+
+* Kanai, M., Maeda, Y. & Okada, Y. Grimon: Graphical interface to visualize multi-omics networks. (in revision). https://github.com/mkanai/grimon
+
 
 ## Contact
 Masahiro Kanai (mkanai@g.harvard.edu)

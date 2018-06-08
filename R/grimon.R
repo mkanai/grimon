@@ -14,11 +14,11 @@
 #' @param col colors of points.
 #' @param label labels of planes (layers).
 #' @param optimize_coordinates a logical value indicating whether to optimize points coordinates across layers.
-#' @param maxiter a maxmium number of iterations for optimization by simulated annealing.
+#' @param maxiter a maximum number of iterations for optimization by simulated annealing.
 #' @param initT a initial value of the temperature parameter \code{T} for simulated annealing.
 #' @param alpha a numerical value of the cooling rate \code{alpha} for simulated annealing.
 #'   If \code{NULL}, \code{alpha} will be set as \code{1 - 5 / maxiter}.
-#' @param score_function an objectice score function to minimize, \code{"angle"} or \code{"length"}.
+#' @param score_function an objective score function to minimize, \code{"angle"} or \code{"length"}.
 #'   If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized.
 #'   If \code{"length"}, the sum of length of segments will be minimized.
 #' @param progress a logical value indicating whether to show optimization progress.

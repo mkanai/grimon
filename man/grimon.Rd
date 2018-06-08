@@ -38,14 +38,14 @@ If \code{NULL} and \code{format} is \code{"wide"}, all points in the same row ar
 
 \item{optimize_coordinates}{a logical value indicating whether to optimize points coordinates across layers.}
 
-\item{maxiter}{a maxmium number of iterations for optimization by simulated annealing.}
+\item{maxiter}{a maximum number of iterations for optimization by simulated annealing.}
 
 \item{initT}{a initial value of the temperature parameter \code{T} for simulated annealing.}
 
 \item{alpha}{a numerical value of the cooling rate \code{alpha} for simulated annealing.
 If \code{NULL}, \code{alpha} will be set as \code{1 - 5 / maxiter}.}
 
-\item{score_function}{an objectice score function to minimize, \code{"angle"} or \code{"length"}.
+\item{score_function}{an objective score function to minimize, \code{"angle"} or \code{"length"}.
 If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized.
 If \code{"length"}, the sum of length of segments will be minimized.}
 
