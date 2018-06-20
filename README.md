@@ -133,7 +133,7 @@ You could also plot the two-dimensional figures of each layer (as shown below) w
 ## Citation
 When using Grimon, please cite the following paper.
 
-* Kanai, M., Maeda, Y. & Okada, Y. Grimon: Graphical interface to visualize multi-omics networks. (in revision). https://github.com/mkanai/grimon
+* Kanai, M., Maeda, Y. & Okada, Y. Grimon: Graphical interface to visualize multi-omics networks. *Bioinformatics* (2018). [doi:10.1093/bioinformatics/bty488](http://dx.doi.org/10.1093/bioinformatics/bty488)
 
 
 ## Contact
