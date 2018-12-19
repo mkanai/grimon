@@ -152,7 +152,12 @@ grimon = function(x, format = "wide",
     }
     mat = wide_to_long(x, z_interval)
     na_idx = which(is.na(mat[,1]))
-    valid_segment_idx = which(!(segment_mat[,1] %in% na_idx | segment_mat[,2] %in% na_idx))
+    valid_segment_idx = which(!(segment_mat[,1] %in% na_idx |
+                                segment_mat[,2] %in% na_idx |
+                                (length(segment_col) == n & is.na(segment_col)) |
+                                (length(segment_alpha) == n & is.na(segment_alpha)) |
+                                (length(segment_lwd) == n & is.na(segment_lwd))
+                              ))
     segment_mat = segment_mat[valid_segment_idx,]
     z_idx = n * (0:m)
 
