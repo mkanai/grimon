@@ -22,6 +22,8 @@
 #'   If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (the horizontal line) will be minimized.
 #'   If \code{"length"}, the sum of length of segments will be minimized.
 #' @param progress a logical value indicating whether to show optimization progress.
+#' @param return_coordinates a logical value indicating whether to return points coordinates across layers.
+#' @param optimized_point_mat a matrix of pre-optimized point coordinates that was returned in a previous run.
 #' @param norm a logical value indicating whether to normalize point scales.
 #'   Point coordinates for x axis, \code{px}, will be normalized as: \code{(px - min(px)) / (max(px) - min(px)) * scale - shift}.
 #'   Ditto for y axis.
@@ -60,6 +62,8 @@ grimon = function(x, format = "wide",
                      maxiter = 1000, initT = 1, alpha = NULL,
                      score_function = "angle",
                      progress = FALSE,
+                     optimized_point_mat = NULL,
+                     return_coordinates = FALSE,
                      norm = TRUE, norm_scale = NULL, norm_shift = NULL,
                      z_interval = 1,
                      point_size = 2,
@@ -99,6 +103,9 @@ grimon = function(x, format = "wide",
   }
   if (!score_function %in% c("angle", "length")) {
     stop('score_function must be "angle" or "length".')
+  }
+  if (!is.null(optimized_point_mat) & optimize_coordinates) {
+    warning('"optimized_point_mat" is aleready provided. No optimization occurs.')
   }
   if (is.null(norm_shift)) {
     if (is.null(norm_scale)) {
@@ -218,7 +225,9 @@ grimon = function(x, format = "wide",
     }
   }
 
-  if (optimize_coordinates) {
+  if (!is.null(optimized_point_mat)) {
+    mat = optimized_point_mat
+  } else if (optimize_coordinates) {
     if (score_function == "angle") {
       score_function = 0
     } else if (score_function == "length") {
@@ -290,6 +299,10 @@ grimon = function(x, format = "wide",
            main = label[i])
     }
     par(oldpar)
+  }
+
+  if (return_coordinates) {
+    return(mat)
   }
 }
 

@@ -9,7 +9,8 @@
 \usage{
 grimon(x, format = "wide", segment_mat = NULL, col = "black",
   label = NULL, optimize_coordinates = FALSE, maxiter = 1000, initT = 1,
-  alpha = NULL, score_function = "angle", progress = FALSE, norm = TRUE,
+  alpha = NULL, score_function = "angle", progress = FALSE,
+  optimized_point_mat = NULL, return_coordinates = FALSE, norm = TRUE,
   norm_scale = NULL, norm_shift = NULL, z_interval = 1, point_size = 2,
   plane_col = "black", plane_alpha = 0.1, border_col = "black",
   border_alpha = 1, border_lwd = 1, segment_col = NULL,
@@ -50,6 +51,10 @@ If \code{"angle"}, the sum of angles of segments (edges) from the flat ground (t
 If \code{"length"}, the sum of length of segments will be minimized.}
 
 \item{progress}{a logical value indicating whether to show optimization progress.}
+
+\item{optimized_point_mat}{a matrix of pre-optimized point coordinates that was returned in a previous run.}
+
+\item{return_coordinates}{a logical value indicating whether to return points coordinates across layers.}
 
 \item{norm}{a logical value indicating whether to normalize point scales.
 Point coordinates for x axis, \code{px}, will be normalized as: \code{(px - min(px)) / (max(px) - min(px)) * scale - shift}.
