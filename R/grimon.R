@@ -33,6 +33,7 @@
 #'   if \code{NULL}, the default value is 1.
 #' @param z_interval a numerical value of the interval length between planes (layers).
 #' @param point_size a point size.
+#' @param point_alpha alpha transparency of points.
 #' @param plane_col colors of planes.
 #' @param plane_alpha alpha transparency of planes.
 #' @param border_col a color of borders surrounding a plane.
@@ -66,7 +67,7 @@ grimon = function(x, format = "wide",
                      return_coordinates = FALSE,
                      norm = TRUE, norm_scale = NULL, norm_shift = NULL,
                      z_interval = 1,
-                     point_size = 2,
+                     point_size = 2, point_alpha = 1,
                      plane_col = 'black', plane_alpha = 0.1,
                      border_col = 'black', border_alpha = 1, border_lwd = 1,
                      segment_col = NULL, segment_alpha = 0.3, segment_lwd = 1,
@@ -156,6 +157,9 @@ grimon = function(x, format = "wide",
     }
     if (length(col) == n) {
       col = rep(col, times = m)
+    }
+    if (length(point_alpha) == n) {
+      point_alpha = rep(point_alpha, times = m)
     }
     mat = wide_to_long(x, z_interval)
     na_idx = which(is.na(mat[,1]))
@@ -279,7 +283,7 @@ grimon = function(x, format = "wide",
   quads3d(plane, col = plane_col, alpha = plane_alpha)
   segments3d(plane, col = border_col, alpha = border_alpha, lwd = border_lwd)
 
-  points3d(mat, col = col, size = point_size)
+  points3d(mat, col = col, size = point_size, alpha = point_alpha)
   segments3d(mat[as.vector(t(segment_mat)),], col = segment_col, alpha = segment_alpha, lwd = segment_lwd)
 
   # axes
