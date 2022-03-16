@@ -1,12 +1,12 @@
 # Grimon
 **Gr**aphical **i**nterface to visualize **m**ulti-**o**mics **n**etworks.
 
-<p><img src="http://mkanai.github.io/img/Grimon_logo.png" width="360px"></p>
+<p><img src="https://mkanai.github.io/assets/img/Grimon_logo.png" width="360px"></p>
 
 ## Overview
 Grimon (**Gr**aphical **i**nterface to visualize **m**ulti-**o**mics **n**etworks) visualizes high-dimensional multi-layered data sets in three-dimensional parallel coordinates. It enables users to intuitively and interactively explore their data, helping their understanding of multiple inter-layer connections embedded in high-dimensional complex data.
 
-<p><img src="http://mkanai.github.io/img/Grimon_demo.png" width=768px></p>
+<p><img src="https://mkanai.github.io/assets/img/Grimon_demo.png" width=768px></p>
 
 ## Installation
 To install Grimon, please type the following code in your R console.
@@ -125,10 +125,10 @@ You could also plot the two-dimensional figures of each layer (as shown below) w
 ## Example figures
 
 ### Example 1: Metagenome data ([Maeda, Y., *et al.*, *Arthritis Rheumatol.*, 2016](http://dx.doi.org/10.1002/art.39783))
-<p><img src="http://mkanai.github.io/img/Grimon_example1.png" width=768px></p>
+<p><img src="https://mkanai.github.io/assets/img/Grimon_example1.png" width=768px></p>
 
 ### Example 2: the Geuvadis Project ([Lappalainen, T., *et al.*, *Nature*, 2013](http://dx.doi.org/10.1038/nature12531))
-<p><img src="http://mkanai.github.io/img/Grimon_example2.png" width=768px></p>
+<p><img src="https://mkanai.github.io/assets/img/Grimon_example2.png" width=768px></p>
 
 ## Citation
 When using Grimon, please cite the following paper.
